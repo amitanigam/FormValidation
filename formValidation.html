@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<meta name="viewpot" content="width=device-width, initial-scale=1.0">
+
+		
+	    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+	    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	   <!--  <link rel="stylesheet" href="/resources/demos/style.css"> -->
+	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">  </script>
+	    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	    <style type="text/css">
+	    	*{margin:0; padding:0; box-sizing: border-box; font-family: arial}
+	    	body{
+	    		background: lightgreen;
+	    		background-size: 100%;
+	    		display: flex;
+	    		align-items: center;
+	    		justify-content: center;
+	    		min-height: 100vh;
+	    		width: 100vw;
+	    	}
+	    	.header {background: #fff; padding:20px;}
+	    	.header h2 {text-align: center; margin: 0 0 20px; }
+	    	label {display: block; margin: 0 0 15px;}
+	    	.form {width: 500px; margin: 0 auto;}
+	    	input[type="submit"] {width: 100%; cursor: pointer; font-weight: bold; height: 30px; background: green; border:none;}
+	    	input[type="submit"]:hover {background: lightblue; }
+	    	.form-control{margin: 0 0 20px; position: relative;}
+	    	.form-control input { width:100%; border:1px solid #777; height: 30px; padding:5px;  }
+	    	.form-control.success input {border-color: green}
+	    	.form-control.error input{border-color: red;}
+	    	.form-control i { position: absolute; right:12px; top:42px; visibility: hidden;}
+	    	.form-control.success i.fa-check-circle {color: green; visibility: visible;}
+	    	.form-control.error i.fa-info-circle {color: red; visibility: visible;}
+	    	.form-control small {visibility: hidden; color: red; position: absolute; bottom: -14px; font-size: 11px; left:0;}
+	    	.form-control.error small {visibility: visible; }
+	    </style>
+</head>
+<body>
+
+	<div class="container">
+		<div class="header">
+			<h2>Register Page</h2>
+			<form class="form" id="form">
+				<div class="form-control">
+					<label>Username </label>	
+					<input type="text" name="" id="usename" placeholder="Enter your full name">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+					<i class="fa fa-info-circle" aria-hidden="true"></i>
+					<small >Error msg</small>
+				</div>
+				<div class="form-control">
+					<label>Email </label>	
+					<input type="email" name="" id="email" placeholder="Enter your email">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+					<i class="fa fa-info-circle" aria-hidden="true"></i>
+					<small >Error msg</small>
+				</div>
+				<div class="form-control">
+					<label>Phone Number </label>	
+					<input type="number" name="" id="phone" placeholder="Enter your phone number">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+					<i class="fa fa-info-circle" aria-hidden="true"></i>
+					<small >Error msg</small>
+				</div>
+				<div class="form-control">
+					<label>Password </label>	
+					<input type="password" name="" id="password" placeholder="Enter your password">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+					<i class="fa fa-info-circle" aria-hidden="true"></i>
+					<small >Error msg</small>
+				</div>
+				<div class="form-control">
+					<label>Confirm Password </label>	
+					<input type="password" name="" id="cpassword" placeholder="Enter your password agian">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+					<i class="fa fa-info-circle" aria-hidden="true"></i>
+					<small >Error msg</small>
+				</div>
+				<div class="form-control">
+					<label>Date of Birth </label>	
+					<input type="text" name="" id="dobid" placeholder="Enter your date of birth">
+					<i class="fa fa-check-circle" aria-hidden="true"></i>
+					<i class="fa fa-info-circle" aria-hidden="true"></i>
+					<small >Error msg</small>
+				</div>
+
+				<input type="submit" name="" value="Submit">
+			</form>
+		</div>
+	</div>
+
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+	<script type="text/javascript">
+		
+		const form = document.getElementById('form');	
+		const username = document.getElementById('usename');
+		const email = document.getElementById('email');
+		const phone = document.getElementById('phone');
+		const password = document.getElementById('password');
+		const cpassword = document.getElementById('cpassword');
+		const dobid = document.getElementById('dobid');
+
+
+		// add Event
+
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			validate();
+		});
+
+		const sendData = (usernameVal, sRate, count) => {
+			if(sRate === count) {
+				alert('SuccessFully !!');
+				swal("Welcome " + usernameVal,  "SuccessFully Done !!", "success");
+				//location.href = `loop.html?username=${usernameVal}`
+			}
+		}
+
+		const successMsg = (usernameVal) => {
+			let formCon = document.getElementsByClassName('form-control');
+
+			var count = formCon.length - 1;
+			for (var i = 0 ; i < formCon.length; i ++) {
+				if(formCon[i].className === "form-control success") {
+					var sRate = 0 + i;
+					console.log(sRate)
+					sendData(usernameVal, sRate, count);
+				}else {
+					return false;
+				}
+			}
+
+		}
+
+		const isEmail = (emailVal) => {
+			var atsimb = emailVal.indexOf('@');
+			if(atsimb < 1 ) return false;
+			var dot = emailVal.lastIndexOf('.');
+			if(dot <= atsimb + 3) return false; 
+			if(dot === emailVal.length - 1) return false; 
+			return true;
+		}
+
+		// define validate function
+
+		const validate = () => {
+
+			const usernameVal = usename.value.trim();
+			const emailVal = email.value.trim();
+			const phoneVal = phone.value.trim();
+			const passwordVal = password.value.trim();
+			const cpasswordVal = cpassword.value.trim();
+			const dobidVal = dobid.value.trim();
+
+			if(usernameVal === ""){
+				setErrorMsg(username, 'username cannot be blank');
+			}else if (usernameVal.length <= 2){
+				setErrorMsg(username, 'Username min 3 char');
+			}else {
+				setSuccessMsg(usename);
+			}
+
+			if(emailVal === ""){
+				setErrorMsg(email, 'email cannot be blank');
+			}else if (!isEmail(emailVal)){
+				setErrorMsg(email, 'not valid email ID');
+			}else {
+				setSuccessMsg(email);
+			}
+
+			if(phoneVal === ""){
+				setErrorMsg(phone, 'Field cannot be blank');
+			}else if (phoneVal.length != 10){
+				setErrorMsg(phone, 'Should be 10 digit');
+			}else {
+				setSuccessMsg(phone);
+			}
+
+			if(passwordVal === ""){
+				setErrorMsg(password, 'Field cannot be blank');
+			}else if (passwordVal.length <= 5){
+				setErrorMsg(password, 'Minmun 6 char');
+			}else {
+				setSuccessMsg(password);
+			}
+
+			if(cpasswordVal === ""){
+				setErrorMsg(cpassword, 'Field cannot be blank');
+			}else if (passwordVal !== cpasswordVal){
+				setErrorMsg(cpassword, 'password is not matching');
+			}else {
+				setSuccessMsg(cpassword);
+			}
+
+			if(dobidVal === ""){
+				setErrorMsg(dobid, 'Field cannotfdfsdf be blank');
+			}else {
+				setSuccessMsg(dobid);
+			}
+
+			successMsg(usernameVal);
+
+		}
+
+
+
+		function setErrorMsg(input, errormsges){
+			const formControl = input.parentElement;
+			const small = formControl.querySelector('small');
+			formControl.className = "form-control error";
+			small.innerText = errormsges;
+		}
+
+		function setSuccessMsg(input){
+			const formControl = input.parentElement;
+			formControl.className = "form-control success";
+		}
+
+		$( function() {
+		    $( "#dobid" ).datepicker();
+		  } );
+
+	</script>
+</body>
+</html>
