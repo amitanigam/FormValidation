@@ -37,6 +37,19 @@
 	    	.form-control.error i.fa-info-circle {color: red; visibility: visible;}
 	    	.form-control small {visibility: hidden; color: red; position: absolute; bottom: -14px; font-size: 11px; left:0;}
 	    	.form-control.error small {visibility: visible; }
+	    	.textPass {font-size: 12px;}
+	    	.indicater { height:10px; display: flex; align-items: center; justify-content: space-between;margin: 10px 0; display: none }
+	    	.indicater span {width: 100%; height: 100%; background: lightgrey; border-radius: 5px; position: relative;}
+	    	.indicater span.medium { 	margin:0 3px; }
+	    	.indicater span:before { content: ''; position: absolute; top:0; left:0; width: 100%;height: 100%;border-radius: 5px; }
+	    	.indicater span.active.weak:before{ background: #ff4757; }
+	    	.indicater span.active.medium:before { background: orange; }
+	    	.indicater span.active.strong:before { background: #23ad5c; }
+	    	.textPass {text-align: center; margin: 0 0 15px; font-weight: bold; display: none}
+	    	.showText {position: absolute; right: 5px; top:38px; text-decoration: none; color: grey; font-weight: bold;  display: none }
+	    	.textPass.weak { color: #ff4757; }
+	    	.textPass.medium { color: orange; }
+	    	.textPass.strong { color: #23ad5c; }
 	    </style>
 </head>
 <body>
@@ -47,7 +60,7 @@
 			<form class="form" id="form">
 				<div class="form-control">
 					<label>Username </label>	
-					<input type="text" name="" id="usename" placeholder="Enter your full name">
+					<input type="text" name="" id="usename" placeholder="Enter your full name" maxlength="15">
 					<i class="fa fa-check-circle" aria-hidden="true"></i>
 					<i class="fa fa-info-circle" aria-hidden="true"></i>
 					<small >Error msg</small>
@@ -61,18 +74,31 @@
 				</div>
 				<div class="form-control">
 					<label>Phone Number </label>	
-					<input type="number" name="" id="phone" placeholder="Enter your phone number">
+					 <input maxlength="15" min="0" name="phonenumber" id="phonenumber" value="" type="number" placeholder="Enter your phone number"/>
+
 					<i class="fa fa-check-circle" aria-hidden="true"></i>
 					<i class="fa fa-info-circle" aria-hidden="true"></i>
 					<small >Error msg</small>
 				</div>
 				<div class="form-control">
 					<label>Password </label>	
-					<input type="password" name="" id="password" placeholder="Enter your password">
+					<input type="password" name="" id="password" placeholder="Enter your password" onkeyup="passFun()">
 					<i class="fa fa-check-circle" aria-hidden="true"></i>
 					<i class="fa fa-info-circle" aria-hidden="true"></i>
+
+					<span class="showText">SHOW </span>
 					<small >Error msg</small>
+
+
+					<div class="indicater">
+					<span class="weak"> </span>
+					<span class="medium"> </span>
+					<span class="strong"> </span>
+				    </div>
+
 				</div>
+				
+				<div class="textPass"></div>
 				<div class="form-control">
 					<label>Confirm Password </label>	
 					<input type="password" name="" id="cpassword" placeholder="Enter your password agian">
@@ -100,11 +126,19 @@
 		const form = document.getElementById('form');	
 		const username = document.getElementById('usename');
 		const email = document.getElementById('email');
-		const phone = document.getElementById('phone');
+		const phone = document.getElementById('phonenumber');
 		const password = document.getElementById('password');
+		const indicater = document.querySelector('.indicater');
+		const weak = document.querySelector('.weak');
+		const medium = document.querySelector('.medium');
+		const strong = document.querySelector('.strong');
+		const textPass = document.querySelector('.textPass');
+		const showText = document.querySelector('.showText');
 		const cpassword = document.getElementById('cpassword');
 		const dobid = document.getElementById('dobid');
-
+		let regExpWeak = /[a-z]/;
+        let regExpMedium = /\d+/;
+        let regExpStrong = /.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/;
 
 		// add Event
 
@@ -146,6 +180,83 @@
 			return true;
 		}
 
+
+		const passFun = (passwordVal) => {
+			if(password.value != ""){
+
+				indicater.style.display = "block";
+				indicater.style.display = "flex";
+
+				if(password.value.length <= 3 && (password.value.match(regExpWeak) || password.value.match(regExpMedium) || password.value.match(regExpStrong)))no=1;
+
+	            if(password.value.length >= 6 && ((password.value.match(regExpWeak) && password.value.match(regExpMedium)) || (password.value.match(regExpMedium) && password.value.match(regExpStrong)) || (password.value.match(regExpWeak) && password.value.match(regExpStrong))))no=2;
+
+	            if(password.value.length >= 6 && password.value.match(regExpWeak) && password.value.match(regExpMedium) && password.value.match(regExpStrong))no=3;
+
+				if(no==1){
+					weak.classList.add('active');
+					textPass.style.display = "block";
+					textPass.textContent ="Your password is too week";
+					textPass.classList.add("weak");
+					
+					return false; 
+				}
+				if(no==2){
+					medium.classList.add('active');
+					textPass.textContent ="Your password is medium";
+					textPass.classList.add('medium');
+
+					return false; 
+				
+				}else {
+					medium.classList.remove('active');
+					textPass.classList.remove('medium');
+				}
+
+				if(no==3){
+					weak.classList.add("active");
+					medium.classList.add("active");
+					strong.classList.add('active');
+					textPass.textContent ="Your password is strong";
+					textPass.classList.add('strong');
+
+					return true; 
+				}else {
+					strong.classList.remove('active');
+					textPass.classList.remove('strong');
+				}
+
+				showText.style.display = "block";
+				showText.onclick = function(){
+					if(password.type == "password"){
+						password.type = "text";
+		                showText.textContent = "HIDE";
+		                showText.style.color = "#23ad5c";
+					}else{
+						password.type = "password";
+						showText.textContent = "SHOW";
+                        showText.style.color = "#000";
+					}
+				}
+
+				
+			}else{
+				indicater.style.display = "none";
+				textPass.style.display = "none";
+				showText.style.display = "none";
+
+				weak.classList.remove("active");
+				medium.classList.remove("active");
+				strong.classList.remove('active');
+
+				textPass.classList.remove('strong');
+				textPass.classList.remove('medium');
+				return false; 
+			}
+
+		}
+
+
 		// define validate function
 
 		const validate = () => {
@@ -158,9 +269,11 @@
 			const dobidVal = dobid.value.trim();
 
 			if(usernameVal === ""){
-				setErrorMsg(username, 'username cannot be blank');
-			}else if (usernameVal.length <= 2){
-				setErrorMsg(username, 'Username min 3 char');
+				setErrorMsg(username, 'username cannot be blank sdfadas');
+			}else if ((usernameVal.length <= 5) || (usernameVal.length > 10)){
+				setErrorMsg(username, 'User name length must be between 6-10');
+			}else if (!isNaN(usernameVal)){
+				setErrorMsg(username, 'Only characters are allowed');
 			}else {
 				setSuccessMsg(usename);
 			}
@@ -175,16 +288,20 @@
 
 			if(phoneVal === ""){
 				setErrorMsg(phone, 'Field cannot be blank');
-			}else if (phoneVal.length != 10){
-				setErrorMsg(phone, 'Should be 10 digit');
+			}else if (phoneVal.length<8){
+				setErrorMsg(phone, 'Input number must be 8-15 digit');
 			}else {
 				setSuccessMsg(phone);
 			}
-
+			//alert(passFun(passwordVal));
 			if(passwordVal === ""){
 				setErrorMsg(password, 'Field cannot be blank');
 			}else if (passwordVal.length <= 5){
 				setErrorMsg(password, 'Minmun 6 char');
+
+			}else if (!passFun(passwordVal)){
+				setErrorMsg(password, 'assas not valid password');
+				//alert('111');
 			}else {
 				setSuccessMsg(password);
 			}
@@ -222,9 +339,26 @@
 		}
 
 		$( function() {
-		    $( "#dobid" ).datepicker();
+		    $( "#dobid" ).datepicker({
+		    	changeMonth: true,
+        		changeYear: true,
+        		dateFormat: 'yy-mm-dd',
+                maxDate: 0 + 1,
+                minDate: '-100Y'
+		    });
 		  } );
 
+
+		$("input[name='phonenumber']").on('keyup keypress blur change', function(e) {
+			if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+			   return false;
+			}else{
+				if( $(this).val().length >= parseInt($(this).attr('maxlength')) && (e.which != 8 && e.which != 0)){
+					return false;
+				}
+			}
+		});
+				 
 	</script>
 </body>
 </html>
